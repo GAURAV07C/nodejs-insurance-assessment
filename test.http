@@ -1,0 +1,10 @@
+@host = http://localhost:5000
+
+### Health check
+GET {{host}}/health
+
+### Swagger UI
+GET {{host}}/api-docs
+
+### Swagger JSON spec
+GET {{host}}/api-docs.json
