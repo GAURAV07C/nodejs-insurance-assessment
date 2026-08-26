@@ -1,6 +1,8 @@
 import express, { type Express } from "express";
 import { logger } from "./config/logger";
 import { setupSwagger } from "./config/swagger";
+import healthRoutes from "./routes/health.routes";
+import uploadRoutes from "./routes/upload.routes";
 
 const app = express();
 
@@ -9,31 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 
 setupSwagger(app);
 
-/**
- * @openapi
- * /health:
- *   get:
- *     summary: Health check
- *     description: Returns the health status of the server.
- *     responses:
- *       200:
- *         description: Server is healthy
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- */
-app.get("/health", (_req, res) => {
-  logger.info("Health check requested");
-  res.status(200).json({
-    success: true,
-    message: "Server is healthy",
-  });
-});
+app.use("/", healthRoutes);
+
+app.use("/api/upload",uploadRoutes);
 
 export default app;
