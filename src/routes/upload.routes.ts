@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/upload/upload:
+ * /api/upload:
  *   post:
  *     summary: Upload insurance data file
  *     description: Upload a CSV/XLSX/XLS file containing insurance data to be processed.
@@ -52,6 +52,6 @@ const router = Router();
  *       500:
  *         description: Failed to process uploaded file
  */
-router.post("/upload", upload.single("file"), uploadInsuranceData);
+router.post("/", upload.single("file"), uploadInsuranceData);
 
 export default router;

@@ -1,10 +1,10 @@
 import { app, request } from "../helpers/request";
 import { sampleCsv, writeTempFile } from "../helpers/fixtures";
 
-describe("POST /api/upload/upload", () => {
+describe("POST /api/upload", () => {
   test("400 when no file is attached", async () => {
     const res = await request(app)
-      .post("/api/upload/upload")
+      .post("/api/upload")
       .field("ignored", "x");
 
     expect(res.status).toBe(400);
@@ -15,7 +15,7 @@ describe("POST /api/upload/upload", () => {
   test("400/500 when file type is not allowed (.txt)", async () => {
     const file = await writeTempFile("just some text", "notes.txt");
 
-    const res = await request(app).post("/api/upload/upload").attach("file", file);
+    const res = await request(app).post("/api/upload").attach("file", file);
 
     expect(res.status).toBeGreaterThanOrEqual(400);
     expect(
@@ -32,7 +32,7 @@ describe("POST /api/upload/upload", () => {
 
     const file = await writeTempFile(csv);
 
-    const res = await request(app).post("/api/upload/upload").attach("file", file);
+    const res = await request(app).post("/api/upload").attach("file", file);
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -43,7 +43,7 @@ describe("POST /api/upload/upload", () => {
   test("200 with empty CSV (no data rows) returns zero counts", async () => {
     const file = await writeTempFile("agent,email\n");
 
-    const res = await request(app).post("/api/upload/upload").attach("file", file);
+    const res = await request(app).post("/api/upload").attach("file", file);
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -65,7 +65,7 @@ describe("POST /api/upload/upload", () => {
 
     const file = await writeTempFile(csv);
 
-    const res = await request(app).post("/api/upload/upload").attach("file", file);
+    const res = await request(app).post("/api/upload").attach("file", file);
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);

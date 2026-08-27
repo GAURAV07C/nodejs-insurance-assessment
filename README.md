@@ -88,7 +88,7 @@ GET /health
 
 ### Upload
 
-POST /api/upload/upload
+POST /api/upload
 
 Content-Type: multipart/form-data
 

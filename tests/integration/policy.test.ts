@@ -13,7 +13,7 @@ const seedPolicy = async (overrides: Record<string, string> = {}) => {
 
   const file = await writeTempFile(csv);
 
-  await request(app).post("/api/upload/upload").attach("file", file);
+  await request(app).post("/api/upload").attach("file", file);
 
   return {
     email: `seed.${unique}@example.com`,
