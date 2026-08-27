@@ -162,7 +162,67 @@ export const searchPoliciesByUsername = async (username: string) => {
     },
   ]);
 
-  logger.info({ count: policies.length }, "Policy search aggregation completed");
+  logger.info(
+    { count: policies.length },
+    "Policy search aggregation completed",
+  );
 
   return policies;
+};
+
+export const aggregatePoliciesByUser = async () => {
+  logger.info("Aggregating policies by user");
+
+  const result = await Policy.aggregate([
+    {
+      $group: {
+        _id: "$userId",
+
+        totalPolicies: {
+          $sum: 1,
+        },
+      },
+    },
+
+    {
+      $lookup: {
+        from: "users",
+        localField: "_id",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+
+    {
+      $unwind: "$user",
+    },
+
+    {
+      $project: {
+        _id: 0,
+
+        userId: "$_id",
+
+        firstName: "$user.firstName",
+
+        email: "$user.email",
+
+        phone: "$user.phone",
+
+        state: "$user.state",
+
+        totalPolicies: 1,
+      },
+    },
+
+    {
+      $sort: {
+        totalPolicies: -1,
+      },
+    },
+  ]);
+
+  logger.info({ count: result.length }, "Policy aggregation by user completed");
+
+  return result;
 };

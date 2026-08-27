@@ -20,5 +20,8 @@ Content-Disposition: form-data; name="file"; filename="data-sheet.csv"
 ### Search policies by username (first name or email)
 GET {{host}}/api/policies/search?username=Lura Lucca
 
+### Aggregate policy counts by user
+GET {{host}}/api/policies/aggregate/users
+
 ### Search policies by username - missing param (expect 400)
 GET {{host}}/api/policies/search

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { searchPoliciesByUsername } from "../services/policy.service";
+import { aggregatePoliciesByUser, searchPoliciesByUsername } from "../services/policy.service";
 import { logger } from "../config/logger";
 
 export const searchPolicies = async (
@@ -35,7 +35,10 @@ export const searchPolicies = async (
       return;
     }
 
-    logger.info({ username, count: policies.length }, "Policy search completed");
+    logger.info(
+      { username, count: policies.length },
+      "Policy search completed",
+    );
     res.status(200).json({
       success: true,
       count: policies.length,
@@ -47,6 +50,34 @@ export const searchPolicies = async (
     res.status(500).json({
       success: false,
       message: "Failed to search policies",
+    });
+  }
+};
+
+export const getPolicyAggregationByUser = async (
+  _req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    logger.info("Policy aggregation by user requested");
+
+    const result = await aggregatePoliciesByUser();
+
+    logger.info(
+      { count: result.length },
+      "Policy aggregation by user completed",
+    );
+    res.status(200).json({
+      success: true,
+      count: result.length,
+      data: result,
+    });
+  } catch (error) {
+    logger.error({ err: error }, "Policy aggregation error");
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to aggregate policies by user",
     });
   }
 };

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { searchPolicies } from "../controllers/policy.controller";
+import { getPolicyAggregationByUser, searchPolicies } from "../controllers/policy.controller";
 
 const router = Router();
 
@@ -132,5 +132,50 @@ const router = Router();
  *         description: Failed to search policies
  */
 router.get("/search", searchPolicies);
+
+/**
+ * @openapi
+ * /api/policies/aggregate/users:
+ *   get:
+ *     summary: Aggregate policy counts by user
+ *     description: Returns the total number of policies per user, sorted by policy count descending.
+ *     tags:
+ *       - Policies
+ *     responses:
+ *       200:
+ *         description: Aggregated policy counts per user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 count:
+ *                   type: number
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       userId:
+ *                         type: string
+ *                       firstName:
+ *                         type: string
+ *                       email:
+ *                         type: string
+ *                         nullable: true
+ *                       phone:
+ *                         type: string
+ *                         nullable: true
+ *                       state:
+ *                         type: string
+ *                         nullable: true
+ *                       totalPolicies:
+ *                         type: number
+ *       500:
+ *         description: Failed to aggregate policies by user
+ */
+router.get("/aggregate/users", getPolicyAggregationByUser);
 
 export default router;
