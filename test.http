@@ -23,5 +23,21 @@ GET {{host}}/api/policies/search?username=Lura Lucca
 ### Aggregate policy counts by user
 GET {{host}}/api/policies/aggregate/users
 
+### Schedule a message (day = tomorrow, time = HH:mm)
+POST {{host}}/api/messages/schedule
+Content-Type: application/json
+
+{
+  "message": "Reminder: policy review due",
+  "day": "2026-08-28",
+  "time": "14:30"
+}
+
+### List scheduled messages
+GET {{host}}/api/messages/scheduled
+
+### Cancel a scheduled message (replace :id with a real id)
+# DELETE {{host}}/api/messages/scheduled/REPLACE_WITH_ID
+
 ### Search policies by username - missing param (expect 400)
 GET {{host}}/api/policies/search

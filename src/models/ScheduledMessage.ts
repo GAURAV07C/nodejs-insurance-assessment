@@ -1,16 +1,20 @@
 import { Schema, model, Document } from "mongoose";
 
-export type MessageStatus = "scheduled" | "completed" | "failed";
+export type ScheduledMessageStatus =
+  | "scheduled"
+  | "completed"
+  | "failed"
+  | "cancelled";
 
-export interface IMessage extends Document {
+export interface IScheduledMessage extends Document {
   message: string;
   scheduledAt: Date;
-  status: MessageStatus;
+  status: ScheduledMessageStatus;
   processedAt?: Date;
   error?: string;
 }
 
-const messageSchema = new Schema<IMessage>(
+const scheduledMessageSchema = new Schema<IScheduledMessage>(
   {
     message: {
       type: String,
@@ -26,7 +30,7 @@ const messageSchema = new Schema<IMessage>(
 
     status: {
       type: String,
-      enum: ["scheduled", "completed", "failed"],
+      enum: ["scheduled", "completed", "failed", "cancelled"],
       default: "scheduled",
       index: true,
     },
@@ -44,9 +48,12 @@ const messageSchema = new Schema<IMessage>(
   },
 );
 
-messageSchema.index({
+scheduledMessageSchema.index({
   status: 1,
   scheduledAt: 1,
 });
 
-export const Message = model<IMessage>("Message", messageSchema);
+export const ScheduledMessage = model<IScheduledMessage>(
+  "ScheduledMessage",
+  scheduledMessageSchema,
+);

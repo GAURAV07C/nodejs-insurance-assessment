@@ -16,6 +16,12 @@ const options: swaggerJsdoc.Options = {
         description: "Local development server",
       },
     ],
+    tags: [
+      { name: "Health", description: "Server health check" },
+      { name: "Upload", description: "Insurance data file upload and processing" },
+      { name: "Policies", description: "Policy search and aggregation" },
+      { name: "Messages", description: "Scheduled message management" },
+    ],
   },
   apis: ["./src/**/*.ts", "./dist/**/*.js"],
 };

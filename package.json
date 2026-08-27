@@ -7,7 +7,11 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "jest"
+    "test": "jest",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop insurance-assessment-api",
+    "pm2:restart": "pm2 restart insurance-assessment-api",
+    "pm2:logs": "pm2 logs insurance-assessment-api"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +23,9 @@
     "mongoose": "^9.9.4",
     "multer": "^2.2.0",
     "node-cron": "^4.6.0",
+    "node-schedule": "^2.1.1",
     "pino": "^10.3.1",
+    "pm2": "^7.0.4",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "xlsx": "^0.18.5"
@@ -32,6 +38,7 @@
     "@types/jest": "^30.0.0",
     "@types/multer": "^2.2.0",
     "@types/node": "^22.20.1",
+    "@types/node-schedule": "^2.1.8",
     "@types/supertest": "^7.2.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",

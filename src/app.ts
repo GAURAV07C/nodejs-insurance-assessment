@@ -1,9 +1,9 @@
 import express, { type Express } from "express";
-import { logger } from "./config/logger";
 import { setupSwagger } from "./config/swagger";
 import healthRoutes from "./routes/health.routes";
 import uploadRoutes from "./routes/upload.routes";
 import policyRoutes from "./routes/policy.routes"
+import messageRoutes from "./routes/message.routes";
 
 const app = express();
 
@@ -17,5 +17,7 @@ app.use("/", healthRoutes);
 app.use("/api/upload", uploadRoutes);
 
 app.use("/api/policies", policyRoutes);
+
+app.use("/api/messages", messageRoutes);
 
 export default app;
