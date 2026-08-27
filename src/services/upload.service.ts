@@ -81,12 +81,28 @@ const normalizeNumber = (value: unknown): number | undefined => {
   return Number.isNaN(number) ? undefined : number;
 };
 
+const EXCEL_EPOCH = 25569;
+
 const normalizeDate = (value: unknown): Date | undefined => {
-  if (typeof value === null || value === undefined || value === "") {
+  if (value === null || value === undefined || value === "") {
     return undefined;
   }
 
-  const date = new Date(String(value));
+  let date: Date;
+
+  if (value instanceof Date) {
+    date = value;
+  } else if (typeof value === "number") {
+    date = new Date((value - EXCEL_EPOCH) * 86400 * 1000);
+  } else {
+    const str = String(value).trim();
+
+    if (/^\d+(\.\d+)?$/.test(str)) {
+      date = new Date((Number(str) - EXCEL_EPOCH) * 86400 * 1000);
+    } else {
+      date = new Date(str);
+    }
+  }
 
   return Number.isNaN(date.getTime()) ? undefined : date;
 };
@@ -466,7 +482,7 @@ export const processUploadFile = async (filePath: string) => {
     const carrierId = companyName ? carrierMap.get(companyName) : undefined;
 
     if (!agentId || !userId || !accountId || !lobId || !carrierId) {
-      console.warn(`Skipping policy ${policyNumber}: missing reference`);
+      logger.warn({ policyNumber }, "Skipping policy: missing reference");
 
       continue;
     }

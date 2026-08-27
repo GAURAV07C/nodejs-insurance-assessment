@@ -8,3 +8,17 @@ GET {{host}}/api-docs
 
 ### Swagger JSON spec
 GET {{host}}/api-docs.json
+
+### Upload insurance data file (multipart)
+POST {{host}}/api/upload/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="data-sheet.csv"
+< ./test-upload.csv
+------WebKitFormBoundary--
+
+### Search policies by username (first name or email)
+GET {{host}}/api/policies/search?username=Lura Lucca
+
+### Search policies by username - missing param (expect 400)
+GET {{host}}/api/policies/search

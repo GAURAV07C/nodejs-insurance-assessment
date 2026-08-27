@@ -14,8 +14,8 @@ interface ParsedRow {
   policy_type: string | null;
   company_name: string | null;
   category_name: string | null;
-  policy_start_date: string | null;
-  policy_end_date: string | null;
+  policy_start_date: Date | null;
+  policy_end_date: Date | null;
   csr: string | null;
   account_name: string | null;
   email: string | null;
@@ -27,7 +27,7 @@ interface ParsedRow {
   address: string | null;
   state: string | null;
   zip: string | null;
-  dob: string | null;
+  dob: Date | null;
   primary: boolean | null;
   Applicant_ID: string | null;
   agency_id: string | null;
@@ -78,10 +78,36 @@ const normalizeBoolean = (value: unknown): boolean | null => {
   return null;
 };
 
+const EXCEL_EPOCH = 25569;
+
+const normalizeDateCell = (value: unknown): Date | null => {
+  if (value === undefined || value === null || value === "") {
+    return null;
+  }
+
+  let date: Date;
+
+  if (value instanceof Date) {
+    date = value;
+  } else if (typeof value === "number") {
+    date = new Date((value - EXCEL_EPOCH) * 86400 * 1000);
+  } else {
+    const str = String(value).trim();
+
+    if (/^\d+(\.\d+)?$/.test(str)) {
+      date = new Date((Number(str) - EXCEL_EPOCH) * 86400 * 1000);
+    } else {
+      date = new Date(str);
+    }
+  }
+
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
 try {
   logger.info({ filePath: workerData.filePath }, "Worker started processing file");
 
-  const workbook = XLSX.readFile(workerData.filePath);
+  const workbook = XLSX.readFile(workerData.filePath, { cellDates: true });
   const sheetName = workbook.SheetNames[0];
 
   if (!sheetName) {
@@ -110,8 +136,8 @@ try {
     company_name: normalizeValue(row.company_name),
     category_name: normalizeValue(row.category_name),
 
-    policy_start_date: normalizeValue(row.policy_start_date),
-    policy_end_date: normalizeValue(row.policy_end_date),
+    policy_start_date: normalizeDateCell(row.policy_start_date),
+    policy_end_date: normalizeDateCell(row.policy_end_date),
     csr: normalizeValue(row.csr),
     account_name: normalizeValue(row.account_name),
     email: normalizeValue(row.email),
@@ -124,7 +150,7 @@ try {
     address: normalizeValue(row.address),
     state: normalizeValue(row.state),
     zip: normalizeValue(row.zip),
-    dob: normalizeValue(row.dob),
+    dob: normalizeDateCell(row.dob),
     primary: normalizeBoolean(row.primary),
     Applicant_ID: normalizeValue(row["Applicant ID"]),
     agency_id: normalizeValue(row.agency_id),
