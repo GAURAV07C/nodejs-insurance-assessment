@@ -1,9 +1,9 @@
-import app from "../src/app";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
 export default async function globalSetup(): Promise<void> {
-  const port = Number(process.env.PORT) || 5000;
+  const mongod = await MongoMemoryServer.create();
 
-  await new Promise<void>((resolve) => {
-    (globalThis as any).__SERVER__ = app.listen(port, () => resolve());
-  });
+  (globalThis as any).__MONGOD__ = mongod;
+
+  process.env.MONGODB_URI = mongod.getUri();
 }

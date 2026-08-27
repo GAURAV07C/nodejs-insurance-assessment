@@ -1,5 +1,6 @@
 import { Worker } from "worker_threads";
 
+import fs from "fs";
 import path from "path";
 
 import { Agent } from "../models/Agent";
@@ -26,7 +27,11 @@ type WorkerResponse = WorkerSuccess | WorkerFailure;
 
 const runWorker = (filePath: string): Promise<WorkerSuccess> => {
   return new Promise((resolve, reject) => {
-    const workerPath = path.resolve(__dirname, "../workers/upload.worker.js");
+    const workerPath = [
+      path.resolve(__dirname, "../workers/upload.worker.js"),
+      path.resolve(__dirname, "../../dist/workers/upload.worker.js"),
+      path.resolve(__dirname, "../dist/workers/upload.worker.js"),
+    ].find((candidate) => fs.existsSync(candidate))!;
 
     logger.info({ workerPath, filePath }, "Spawning upload worker");
 
@@ -42,16 +47,19 @@ const runWorker = (filePath: string): Promise<WorkerSuccess> => {
           { error: message.error },
           "Upload worker returned failure",
         );
+        worker.terminate();
         reject(new Error(message.error));
         return;
       }
 
       logger.info({ totalRows: message.totalRows }, "Upload worker completed");
+      worker.terminate();
       resolve(message);
     });
 
     worker.on("error", (error) => {
       logger.error({ error }, "Upload worker errored");
+      worker.terminate();
       reject(error);
     });
 
@@ -64,16 +72,16 @@ const runWorker = (filePath: string): Promise<WorkerSuccess> => {
   });
 };
 
-const normalizeString = (value: unknown): string | undefined => {
-  if (typeof value === null || value === undefined || value === "") {
+export const normalizeString = (value: unknown): string | undefined => {
+  if (value === null || value === undefined || value === "") {
     return undefined;
   }
 
   return String(value).trim();
 };
 
-const normalizeNumber = (value: unknown): number | undefined => {
-  if (typeof value === null || value === undefined || value === "") {
+export const normalizeNumber = (value: unknown): number | undefined => {
+  if (value === null || value === undefined || value === "") {
     return undefined;
   }
   const number = Number(value);
@@ -83,7 +91,7 @@ const normalizeNumber = (value: unknown): number | undefined => {
 
 const EXCEL_EPOCH = 25569;
 
-const normalizeDate = (value: unknown): Date | undefined => {
+export const normalizeDate = (value: unknown): Date | undefined => {
   if (value === null || value === undefined || value === "") {
     return undefined;
   }

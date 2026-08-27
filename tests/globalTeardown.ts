@@ -1,9 +1,9 @@
 export default async function globalTeardown(): Promise<void> {
-  const server = (globalThis as any).__SERVER__;
+  const mongod = (globalThis as any).__MONGOD__ as {
+    stop: () => Promise<void>;
+  } | undefined;
 
-  if (server) {
-    await new Promise<void>((resolve, reject) => {
-      server.close((err: any) => (err ? reject(err) : resolve()));
-    });
+  if (mongod) {
+    await mongod.stop();
   }
 }
