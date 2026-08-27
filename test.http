@@ -10,7 +10,7 @@ GET {{host}}/api-docs
 GET {{host}}/api-docs.json
 
 ### Upload insurance data file (multipart)
-POST {{host}}/api/upload/upload
+POST {{host}}/api/upload
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 ------WebKitFormBoundary
 Content-Disposition: form-data; name="file"; filename="data-sheet.csv"
