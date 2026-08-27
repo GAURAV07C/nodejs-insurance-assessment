@@ -10,7 +10,6 @@ Production-ready Node.js + TypeScript backend built for the **InsuredMine** tech
 
 ---
 
-
 ## 🎯 Overview
 
 This system manages insurance policies, agents, users, accounts, lines of business (LOB), and carriers. It processes large XLSX/CSV insurance dataset uploads asynchronously using **Node.js Worker Threads**, aggregates policy records per user, enables real-time search, monitors CPU utilization for server auto-restarting at 70% threshold using **PM2**, and provides a scheduled message insertion background service using **Node-Schedule**.
