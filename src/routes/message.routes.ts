@@ -5,6 +5,7 @@ import {
   listScheduledMessages,
   cancelMessage,
 } from "../controllers/message.controller";
+import { validateScheduleMessage } from "../middleware/message.validation";
 
 const router = Router();
 
@@ -103,7 +104,7 @@ const router = Router();
  *       400:
  *         description: Message not found or cannot be cancelled
  */
-router.post("/schedule", createScheduledMessage);
+router.post("/schedule", validateScheduleMessage, createScheduledMessage);
 
 router.get("/scheduled", listScheduledMessages);
 

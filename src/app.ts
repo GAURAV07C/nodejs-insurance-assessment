@@ -4,6 +4,7 @@ import healthRoutes from "./routes/health.routes";
 import uploadRoutes from "./routes/upload.routes";
 import policyRoutes from "./routes/policy.routes"
 import messageRoutes from "./routes/message.routes";
+import { errorHandler } from "./middleware/error.middleware";
 
 const app = express();
 
@@ -19,5 +20,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/policies", policyRoutes);
 
 app.use("/api/messages", messageRoutes);
+
+app.use(errorHandler);
 
 export default app;

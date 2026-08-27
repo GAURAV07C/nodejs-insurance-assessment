@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "jest",
+    "test:watch": "jest --watch",
     "pm2:start": "pm2 start ecosystem.config.js",
     "pm2:stop": "pm2 stop insurance-assessment-api",
     "pm2:restart": "pm2 restart insurance-assessment-api",

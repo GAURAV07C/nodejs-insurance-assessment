@@ -1,6 +1,7 @@
 import os from "os";
 
 import { logger } from "../config/logger";
+import { env } from "../config/env";
 
 export interface CpuMonitorOptions {
   threshold?: number;
@@ -16,8 +17,9 @@ class CpuMonitorService {
   private isShuttingDown = false;
 
   constructor(options: CpuMonitorOptions = {}) {
-    this.threshold = options.threshold ?? 70;
-    this.intervalMs = options.intervalMs ?? 5000;
+    this.threshold = options.threshold ?? env.CPU_THRESHOLD;
+
+    this.intervalMs = options.intervalMs ?? env.CPU_MONITOR_INTERVAL;
   }
 
   private getCpuSnapshot() {
@@ -116,7 +118,4 @@ class CpuMonitorService {
   }
 }
 
-export const cpuMonitor = new CpuMonitorService({
-  threshold: 70,
-  intervalMs: 5000,
-});
+export const cpuMonitor = new CpuMonitorService();

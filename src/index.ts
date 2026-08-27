@@ -1,12 +1,11 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import app from "./app";
-import { connectDatabase } from "./config/database";
+import { connectDatabase,disconnectDatabase } from "./config/database";
+import { env } from "./config/env";
 import { logger } from "./config/logger";
 import { cpuMonitor } from "./services/cpu-monitor.service";
+import { messageScheduler } from "./services/message-scheduler.service";
 
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = env.PORT;
 
 const startServer = async (): Promise<void> => {
   try {
@@ -21,6 +20,8 @@ const startServer = async (): Promise<void> => {
 
     cpuMonitor.start();
 
+    await messageScheduler.start();
+
     /*
      * Graceful shutdown
      */
@@ -32,8 +33,12 @@ const startServer = async (): Promise<void> => {
 
       cpuMonitor.stop();
 
-      server.close(() => {
+      messageScheduler.cancelAll();
+
+      server.close(async () => {
         logger.info("HTTP server closed.");
+
+        await disconnectDatabase()
 
         process.exit(0);
       });

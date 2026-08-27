@@ -77,6 +77,34 @@ class MessageSchedulerService {
     }
   }
 
+  public async start(): Promise<void> {
+    const scheduledMessages = await ScheduledMessage.find({
+      status: "scheduled",
+    }).lean();
+
+    const now = Date.now();
+
+    for (const message of scheduledMessages) {
+      if (message.scheduledAt.getTime() <= now) {
+        /*
+         * Past-due message: process it immediately
+         * so it is not silently lost after a restart.
+         */
+
+        void this.processMessage(message._id.toString());
+
+        continue;
+      }
+
+      this.scheduleMessage(message._id.toString(), message.scheduledAt);
+    }
+
+    logger.info(
+      { count: scheduledMessages.length },
+      "Rehydrated scheduled messages",
+    );
+  }
+
   public cancelMessage(messageId: string): boolean {
     const job = this.jobs.get(messageId);
 
