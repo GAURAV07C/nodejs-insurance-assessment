@@ -29,36 +29,56 @@ InsuredMine technical assessment.
 - Jest
 - Supertest
 - mongodb-memory-server
-
 ## Setup
 
 ### 1. Clone
 
-git clone <repository-url>
+```bash
+git clone https://github.com/GAURAV07C/nodejs-insurance-assessment
+cd nodejs-insurance-assessment
+```
 
 ### 2. Install dependencies
 
+```bash
 npm install
+```
 
 ### 3. Configure environment
 
+```bash
 cp .env.example .env
+```
 
-Add your MongoDB connection string in `.env` (`MONGODB_URI`).
+Then open `.env` and set your `MONGODB_URI` (the default points to a local MongoDB at `mongodb://127.0.0.1:27017/insurance_assessment`).
 
-### 4. Development
+### 4. Build
 
-npm run dev
-
-### 5. Build
-
+```bash
 npm run build
+```
 
-> Note: `npm start` runs the compiled output from `dist/`, so run `npm run build` first. The upload worker is loaded from the compiled `dist/workers` folder.
+> The server runs the compiled output from `dist/`, and the upload worker is loaded from the compiled `dist/workers` folder, so build first.
 
-### 6. Test
+### 5. Run the server
 
+```bash
+npm start
+```
+
+The API will be available at `http://localhost:5000` and the Swagger UI at `http://localhost:5000/api-docs`.
+
+### 6. Development mode
+
+```bash
+npm run dev
+```
+
+### 7. Run tests
+
+```bash
 npm test
+```
 
 ## API Endpoints
 
