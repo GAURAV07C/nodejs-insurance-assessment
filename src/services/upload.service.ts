@@ -47,19 +47,16 @@ const runWorker = (filePath: string): Promise<WorkerSuccess> => {
           { error: message.error },
           "Upload worker returned failure",
         );
-        worker.terminate();
         reject(new Error(message.error));
         return;
       }
 
       logger.info({ totalRows: message.totalRows }, "Upload worker completed");
-      worker.terminate();
       resolve(message);
     });
 
     worker.on("error", (error) => {
       logger.error({ error }, "Upload worker errored");
-      worker.terminate();
       reject(error);
     });
 
